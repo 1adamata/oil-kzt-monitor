@@ -1,0 +1,62 @@
+name: oil-kzt-monitor
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  redpanda_data:
+  timescale_data: 
+
+services:
+  redpanda-0:
+    image: docker.redpanda.com/redpandadata/redpanda:v26.1.5
+    container_name: redpanda-0
+    command:
+      - redpanda
+      - start
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      - internal://redpanda-0:9092,external://localhost:19092
+      - --rpc-addr
+      - redpanda-0:33145
+      - --advertise-rpc-addr
+      - redpanda-0:33145
+      - --mode
+      - dev-container
+      - --smp
+      - "1"
+      - --default-log-level=info
+    ports:
+      - "19092:19092"   # Kafka API (from your laptop)
+      - "19644:9644"    # Admin API
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app
+
+  timescaledb:
+    image: timescale/timescaledb-ha:pg17
+    env_file:
+      - ../.env
+    container_name: timescaledb
+    environment:
+      POSTGRES_DB: market_data
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale_data:/home/postgres/pgdata/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d market_data"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app
