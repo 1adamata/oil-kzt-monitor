@@ -79,6 +79,11 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
     depends_on:
       timescaledb:
         condition: service_healthy
