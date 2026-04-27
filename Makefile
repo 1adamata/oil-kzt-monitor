@@ -36,9 +36,10 @@ rpk:  ## Open rpk shell in redpanda
 	docker exec -it redpanda-0 rpk cluster info
 
 db-reset:  ## Wipe and re-initialize the database
-	$(COMPOSE) down
+	$(COMPOSE) stop timescaledb
+	$(COMPOSE) rm -f timescaledb
 	docker volume rm oil-kzt-monitor_timescale_data || true
 	$(COMPOSE) up -d timescaledb
 	@echo "Waiting for timescaledb to be healthy..."
-	@sleep 10
+	@sleep 15
 	@echo "TimescaleDB re-initialized with init-sql/ scripts."

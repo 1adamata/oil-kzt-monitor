@@ -57,6 +57,7 @@ services:
       - "5432:5432"
     volumes:
       - timescale_data:/home/postgres/pgdata/data
+      - ./timescaledb/init-sql:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d market_data"]
       interval: 10s
