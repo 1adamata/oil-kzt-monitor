@@ -73,6 +73,7 @@ def fetch_oil(product_code: str, start: date, end: date) -> pd.DataFrame:
         - Sorting after the conversion makes the output stable even if the API
           returns rows out of order.
     """
+    all_rows = []
     params = {
         "api_key": API_KEY,
         "frequency": "daily",
@@ -81,14 +82,18 @@ def fetch_oil(product_code: str, start: date, end: date) -> pd.DataFrame:
         "start": start.isoformat(),
         "end": end.isoformat(),
         "length": 5000,
+        "offset": 0,
     }
-    response = requests.get(BASE_URL, params=params)
-    response.raise_for_status()
-    rows = response.json()["response"]["data"]
-    df = pd.DataFrame(rows)[["period", "value"]]
+    while True:
+        response = requests.get(BASE_URL, params=params)
+        response.raise_for_status()
+        data = response.json()["response"]
+        all_rows.extend(data["data"])
+        if len(all_rows) >= int(data["total"]):
+            break
+        params["offset"] += 5000
+    df = pd.DataFrame(all_rows)[["period", "value"]]
     df.columns = ["date", "price"]
-    # Normalize the API strings into typed columns so the saved corpus has
-    # predictable dtypes for plotting, filtering, and time-series joins.
     df["date"] = pd.to_datetime(df["date"])
     df["price"] = df["price"].astype(float)
     return df.sort_values("date").reset_index(drop=True)
@@ -136,25 +141,35 @@ def main():
     # Create the output directory lazily so a fresh checkout can run the script
     # without any manual setup.
     CORPUS_DIR.mkdir(parents=True, exist_ok=True)
-    # Use a rolling one-year window to keep the generated corpus compact while
-    # still preserving enough history for charting and basic analysis.
     end = date.today()
-    start = end - timedelta(days=365)
+    start = date(2000, 1, 1)
 
     for name, code in INSTRUMENTS.items():
-        # Keep the loop explicit so each instrument can be fetched and written
-        # independently without failing the entire corpus generation step.
         print(f"Fetching {name} ({code}) from {start} to {end}...")
         df = fetch_oil(code, start, end)
         out = CORPUS_DIR / f"{name}_daily.parquet"
         df.to_parquet(out, index=False)
         print(f"  Saved {len(df)} rows → {out}")
 
-    print(f"Fetching USD/KZT from {start} to {end}...")
-    df_fx = fetch_usdkzt(start, end)
+    # Load historical KZT from Kaggle CSV (2000-2024)
+    print("Loading historical USD/KZT from Kaggle CSV...")
+    hist = pd.read_csv(CORPUS_DIR / "usdkzt_historical.csv")
+    hist["date"] = pd.to_datetime(hist["Date"], format="%d.%m.%Y")
+    hist = hist[["date", "USD"]].rename(columns={"USD": "rate"})
+    hist["rate"] = hist["rate"].astype(float)
+
+    # Fetch recent KZT (2024-now) from NBK to fill the gap
+    kaggle_end = hist["date"].max().date()
+    nbk_start = kaggle_end + timedelta(days=1)
+    print(f"Fetching NBK USD/KZT from {nbk_start} to {end}...")
+    recent = fetch_usdkzt(nbk_start, end)
+
+    # Combine
+    df_fx = pd.concat([hist, recent], ignore_index=True)
+    df_fx = df_fx.drop_duplicates(subset=["date"]).sort_values("date").reset_index(drop=True)
     out = CORPUS_DIR / "usdkzt_daily.parquet"
     df_fx.to_parquet(out, index=False)
     print(f"  Saved {len(df_fx)} rows → {out}")
-
+    
 if __name__ == "__main__":
     main()

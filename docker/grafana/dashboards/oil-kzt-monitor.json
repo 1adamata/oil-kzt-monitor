@@ -2,21 +2,21 @@
   "apiVersion": "dashboard.grafana.app/v2",
   "kind": "Dashboard",
   "metadata": {
-    "name": "adhjpfz",
+    "name": "addxlp4",
     "namespace": "default",
-    "uid": "6f6d8bf0-899a-4b28-882a-cb1116369aba",
-    "resourceVersion": "1778533451159007",
-    "generation": 2,
-    "creationTimestamp": "2026-05-11T20:53:43Z",
+    "uid": "a023b74f-f603-44d6-a586-b274efb3c490",
+    "resourceVersion": "1778542863587013",
+    "generation": 3,
+    "creationTimestamp": "2026-05-11T23:17:44Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "300216137105408"
+      "grafana.app/deprecatedInternalID": "336460870402048"
     },
     "annotations": {
-      "grafana.app/createdBy": "user:dfjk4s94b4lc0b",
+      "grafana.app/createdBy": "user:eflsa23tw3hmoa",
       "grafana.app/folder": "",
       "grafana.app/saved-from-ui": "Grafana v13.0.1 (a100054f)",
-      "grafana.app/updatedBy": "user:dfjk4s94b4lc0b",
-      "grafana.app/updatedTimestamp": "2026-05-11T21:04:11Z"
+      "grafana.app/updatedBy": "user:eflsa23tw3hmoa",
+      "grafana.app/updatedTimestamp": "2026-05-11T23:41:03Z"
     }
   },
   "spec": {
@@ -60,14 +60,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
-                        "format": "time_series",
-                        "rawSql": "SELECT bucket_time AS time, oil_price FROM md.curated_aligned_bars WHERE oil_symbol = 'brent' AND bucket_time >= '2025-05-01' ORDER BY time"
+                        "dataset": "market_data",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT bucket_time AS time, oil_price FROM md.curated_aligned_bars WHERE oil_symbol = 'brent' AND $__timeFilter(bucket_time) ORDER BY time",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "A",
@@ -79,14 +99,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
-                        "format": "time_series",
-                        "rawSql": "SELECT bucket_time AS time, usdkzt FROM md.curated_aligned_bars WHERE oil_symbol = 'brent' AND bucket_time >= '2025-05-01' ORDER BY time"
+                        "dataset": "market_data",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT bucket_time AS time, usdkzt FROM md.curated_aligned_bars WHERE oil_symbol = 'brent' AND $__timeFilter(bucket_time) ORDER BY time",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "B",
@@ -173,7 +213,20 @@
                     }
                   }
                 },
-                "overrides": []
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "usdkzt"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.axisPlacement",
+                        "value": "right"
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -195,14 +248,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
-                        "format": "time_series",
-                        "rawSql": "SELECT bucket_time AS time, value AS corr_30d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'pearson_corr' AND horizon = '30d' AND bucket_time >= '2025-05-01' ORDER BY time"
+                        "dataset": "market_data",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT bucket_time AS time, value AS corr_30d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'pearson_corr' AND horizon = '30d' AND $__timeFilter(bucket_time) ORDER BY time",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "A",
@@ -214,14 +287,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
-                        "format": "time_series",
-                        "rawSql": "SELECT bucket_time AS time, value AS corr_60d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'pearson_corr' AND horizon = '60d' AND bucket_time >= '2025-05-01' ORDER BY time"
+                        "dataset": "market_data",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT bucket_time AS time, value AS corr_60d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'pearson_corr' AND horizon = '60d' AND $__timeFilter(bucket_time) ORDER BY time",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "B",
@@ -332,14 +425,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
-                        "format": "time_series",
-                        "rawSql": "SELECT bucket_time AS time, value AS zscore_30d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'spread_zscore' AND horizon = '30d' AND bucket_time >= '2025-05-01' ORDER BY time"
+                        "dataset": "market_data",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT bucket_time AS time, value AS zscore_30d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'spread_zscore' AND horizon = '30d' AND $__timeFilter(bucket_time) ORDER BY time",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "A",
@@ -351,14 +464,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
-                        "format": "time_series",
-                        "rawSql": "SELECT bucket_time AS time, value AS zscore_60d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'spread_zscore' AND horizon = '60d' AND bucket_time >= '2025-05-01' ORDER BY time"
+                        "dataset": "market_data",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT bucket_time AS time, value AS zscore_60d FROM md.relationship_metrics WHERE oil_symbol = 'brent' AND metric = 'spread_zscore' AND horizon = '60d' AND $__timeFilter(bucket_time) ORDER BY time",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "B",
@@ -467,14 +600,34 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
                         "name": "timescaledb"
                       },
                       "spec": {
+                        "dataset": "market_data",
+                        "editorMode": "code",
                         "format": "table",
-                        "rawSql": "SELECT fired_at, kind, severity, oil_symbol, horizon, description FROM md.alerts ORDER BY fired_at DESC LIMIT 50"
+                        "rawQuery": true,
+                        "rawSql": "SELECT fired_at, kind, severity, oil_symbol, horizon, description FROM md.alerts ORDER BY fired_at DESC LIMIT 50",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
                       }
                     },
                     "refId": "A",
@@ -493,7 +646,13 @@
             "spec": {
               "options": {
                 "cellHeight": "sm",
-                "showHeader": true
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "oil_symbol"
+                  }
+                ]
               },
               "fieldConfig": {
                 "defaults": {
@@ -521,7 +680,68 @@
                     "inspect": false
                   }
                 },
-                "overrides": []
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "severity"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 83
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "oil_symbol"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 50
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "horizon"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 50
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "kind"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 196
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "fired_at"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 170
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -538,7 +758,7 @@
               "x": 0,
               "y": 0,
               "width": 24,
-              "height": 8,
+              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-1"
@@ -549,9 +769,9 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 0,
-              "y": 8,
+              "y": 9,
               "width": 24,
-              "height": 8,
+              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-2"
@@ -562,9 +782,9 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 0,
-              "y": 16,
+              "y": 18,
               "width": 24,
-              "height": 8,
+              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-3"
@@ -575,7 +795,7 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 0,
-              "y": 24,
+              "y": 27,
               "width": 24,
               "height": 6,
               "element": {
@@ -590,12 +810,16 @@
     "links": [],
     "liveNow": false,
     "preload": false,
-    "tags": [],
+    "tags": [
+      "oil",
+      "kzt",
+      "monitoring"
+    ],
     "timeSettings": {
       "timezone": "utc",
-      "from": "now-1y",
-      "to": "now",
-      "autoRefresh": "1m",
+      "from": "2000-01-05T00:00:00.000Z",
+      "to": "2026-05-01T00:00:00.000Z",
+      "autoRefresh": "",
       "autoRefreshIntervals": [
         "5s",
         "10s",

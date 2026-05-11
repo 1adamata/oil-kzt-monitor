@@ -15,7 +15,9 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "requests>=2.32",
     "ruptures>=1.1",
+    "scikit-learn>=1.5",
     "structlog>=24.4",
+    "xgboost>=2.1",
 ]
 
 [dependency-groups]
