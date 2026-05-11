@@ -6,8 +6,13 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "confluent-kafka>=2.6",
+    "lxml>=5.0",
+    "pandas>=2.2",
+    "pyarrow>=17.0",
     "pydantic>=2.8",
     "pydantic-settings>=2.4",
+    "python-dotenv>=1.2.2",
+    "requests>=2.32",
     "structlog>=24.4",
 ]
 
