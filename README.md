@@ -136,6 +136,13 @@ uv run python src/ml/train_models.py
 
 Go to `http://localhost:3000` and open the **OIL-KZT Monitor** dashboard.
 
+### Dashboard
+
+![OIL-KZT Monitor dashboard panels 1-2](assets/1-2_panels.png)
+
+![OIL-KZT Monitor dashboard panels 3-4](assets/3-4_panels.png)
+
+
 ## Key findings (25 years of data)
 
 The system detected 41 anomaly alerts across 25 years, clustering around known macroeconomic events:
