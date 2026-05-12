@@ -209,4 +209,3 @@ __marimo__/
 # Project-specific
 data/corpus/*.parquet
 data/corpus/*.csv
-!data/corpus/.gitkeep
